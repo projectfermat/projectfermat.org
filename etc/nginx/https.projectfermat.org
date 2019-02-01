@@ -1,0 +1,33 @@
+# https://example.com/
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+
+    server_name projectfermat.org projectfermat;
+
+    ssl_certificate /etc/letsencrypt/live/projectfermat.org/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/projectfermat.org/privkey.pem;
+
+    root /var/www/projectfermat.org;
+}
+
+# https://www.example.com/ => https://example.com/
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+
+    server_name www.projectfermat.org;
+
+    ssl_certificate /etc/letsencrypt/live/projectfermat.org/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/projectfermat.org/privkey.pem;
+
+    return 301 https://projectfermat.org$request_uri;
+}
+
+# http://example.com/, http://www.example.com/ => https://example.com/
+server {
+    listen 80;
+    listen [::]:80;
+    server_name projectfermat.org www.projectfermat.org;
+    return 301 https://projectfermat.org$request_uri;
+}
